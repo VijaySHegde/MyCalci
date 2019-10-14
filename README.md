@@ -1,2 +1,0 @@
-# MyCalci
-Monday Task
