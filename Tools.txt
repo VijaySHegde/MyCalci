@@ -1,0 +1,13 @@
+1. github --- junit 
+2. aws ec2 instance
+3. jenkins
+4. maven 
+5. sonarQube
+6. nexus
+7. ansible
+8. jira
+
+
+
+sudo - supersuer do
+apt - advanced package tool
