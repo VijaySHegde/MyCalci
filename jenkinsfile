@@ -1,43 +1,48 @@
 pipeline {
+libraries{
+lib 'shlib'
+lib 'shlib@sonar.groovy'
+}
     agent any
-   
+    tools{
+    maven 'Maven'
+    }
+ 
     stages {
-
+      stage('Start')
+            {
+                steps
+                 { 
+                    sendNotifications 'STARTED'
+                 }
+            }
+  
       stage('clean')
             {
                 steps
                  { 
-                    sh 'mvn clean package'
+                 sendNotifications 'STARTEDBUILD'
+                 sh 'mvn clean install'
                  }
             }
-        stage("build & SonarQube analysis") {
-            steps {
-              withSonarQubeEnv('sonarqube') {
-                sh 'mvn clean package sonar:sonar'
-              }
-            } 
-        }
-        stage("Quality Gate") {
-            steps {
-              timeout(time: 1, unit: 'HOURS') {
-                waitForQualityGate abortPipeline: true
-              }
+      stage('Startnexus')
+            {
+                steps
+                 { 
+                    sonar 'STARTEDNEX'
+                 }
             }
+             stage('Startsonar')
+            {
+                steps
+                 { 
+                    sonar 'Sonarstagestarted'
+                 }
             }
-        
-       stage('nexus'){
-       steps{
-       nexusArtifactUploader artifacts: [[artifactId: 'java-tomcat-maven-example', classifier: '', file: '/var/lib/jenkins/workspace/DeployPipeline/target/java-tomcat-maven-example.war', type: 'war']], credentialsId: '09078004-6814-49f4-9ad8-066e34c85e11', groupId: 'com.example', nexusUrl: '18.224.155.110:8081/nexus', nexusVersion: 'nexus2', protocol: 'http', repository: 'devopstraining', version: '1.0-phoenix'
-       }
-       
-       }
-       stage('deploy'){
-        steps{  
-          sshagent(['tomcat-dev']) {
-            sh 'scp StrictHostKeyChecking=no target/*.war ec2-user@52.66.212.90:~/apache-tomcat-9.0.26/webapps/'
-            }
-        }
-       
-       }
+}
+post{
+always{
+sendNotifications currentBuild.result
+}
 }
 }
