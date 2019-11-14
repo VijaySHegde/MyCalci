@@ -15,6 +15,9 @@ lib 'shlib@sonar.groovy'
         steps
         {
         jiraSendBuildInfo branch: '', site: 'https://vijaysh.atlassian.net/'
+        }
+        }
+        
       stage('Start')
             {
                 steps
