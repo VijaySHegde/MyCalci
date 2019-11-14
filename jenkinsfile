@@ -9,6 +9,12 @@ lib 'shlib@sonar.groovy'
     }
  
     stages {
+    
+    stage('issue tracker')
+    {
+        steps
+        {
+        jiraSendBuildInfo branch: '', site: 'https://vijaysh.atlassian.net/'
       stage('Start')
             {
                 steps
